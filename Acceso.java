@@ -9,11 +9,11 @@ public class Acceso
     public Acceso(String datos)
     {
         String[] elementosLinea = datos.split(" ");
-        this.ano = Integer.parseInt(elementosLinea[0]);
-        this.mes = Integer.parseInt(elementosLinea[1]);
-        this.dia = Integer.parseInt(elementosLinea[2]);
-        this.hora = Integer.parseInt(elementosLinea[3]);
-        this.minutos = Integer.parseInt(elementosLinea[4]);
+        this.ano = Integer.parseInt(elementosLinea[1].substring(1, 5));
+        this.mes = Integer.parseInt(elementosLinea[2]);
+        this.dia = Integer.parseInt(elementosLinea[3]);
+        this.hora = Integer.parseInt(elementosLinea[4]);
+        this.minutos = Integer.parseInt(elementosLinea[5].substring(0, 2));
     }
     
     public int getAno() 
