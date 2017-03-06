@@ -5,15 +5,17 @@ public class Acceso
     private int dia;
     private int hora;
     private int minutos;
+    private String pagina;
     
     public Acceso(String datos)
     {
         String[] elementosLinea = datos.split(" ");
-        this.ano = Integer.parseInt(elementosLinea[1].substring(1, 5));
-        this.mes = Integer.parseInt(elementosLinea[2]);
-        this.dia = Integer.parseInt(elementosLinea[3]);
-        this.hora = Integer.parseInt(elementosLinea[4]);
-        this.minutos = Integer.parseInt(elementosLinea[5].substring(0, 2));
+        ano = Integer.parseInt(elementosLinea[1].substring(1, 5));
+        mes = Integer.parseInt(elementosLinea[2]);
+        dia = Integer.parseInt(elementosLinea[3]);
+        hora = Integer.parseInt(elementosLinea[4]);
+        minutos = Integer.parseInt(elementosLinea[5].substring(0, 2));
+        pagina = elementosLinea[6];
     }
     
     public int getAno() 
@@ -39,5 +41,10 @@ public class Acceso
     public int getMinutos()
     {
         return minutos;
+    }
+    
+    public String getPagina()
+    {
+        return pagina;
     }
 }

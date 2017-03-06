@@ -1,18 +1,18 @@
 import java.io.File;
 import java.util.Scanner;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
 
 public class AnalizadorAccesosAServidor
 {
     private ArrayList<Acceso> accesos;
-    
-    
+
     public AnalizadorAccesosAServidor() 
     {
         accesos = new ArrayList<>();
     }
-    
-    
+
     public void analizarArchivoDeLog(String archivo)
     {
         accesos.clear();
@@ -29,20 +29,19 @@ public class AnalizadorAccesosAServidor
             System.out.println("Ocurrio algun error al leer el archivo.");
         }
     }
-    
-    
+
     public int obtenerHoraMasAccesos() 
     {
         int valorADevolver = -1;
-        
+
         if (!accesos.isEmpty()) {
             int[] accesosPorHora = new int[24];
-    
+
             for (Acceso accesoActual : accesos) {
                 int horaAccesoActual = accesoActual.getHora();
                 accesosPorHora[horaAccesoActual] = accesosPorHora[horaAccesoActual] + 1;
             }
-            
+
             int numeroDeAccesosMasAlto = accesosPorHora[0];
             int horaDeAccesosMasAlto = 0;
             for (int i = 0; i < accesosPorHora.length; i++) {
@@ -51,24 +50,48 @@ public class AnalizadorAccesosAServidor
                     horaDeAccesosMasAlto = i;
                 }
             }
-            
+
             valorADevolver = horaDeAccesosMasAlto;                      
         }
-        
+
         return valorADevolver;
     }
 
-    
-    
     public String paginaWebMasSolicitada() 
     {
-        return "";
+        String valorADevolver = null;
+        if (!accesos.isEmpty()) {
+            HashMap<String, Integer> paginasSolicitadas = new HashMap<String, Integer>();
+            for (Acceso accesoActual : accesos) {
+                String paginaActual = accesoActual.getPagina();
+                if(!paginasSolicitadas.containsKey(paginaActual)){
+                    paginasSolicitadas.put(paginaActual, 1);
+                }else{
+                    paginasSolicitadas.put(paginaActual, paginasSolicitadas.get(paginaActual) + 1);
+                }
+            }
+            String paginaMasVisitada = null;
+            Iterator<String> it = paginasSolicitadas.keySet().iterator();
+            while (it.hasNext()) {
+                String paginaActual =it.next();
+                if(paginaMasVisitada == null){
+                    paginaMasVisitada = paginaActual;
+                }else{
+                    if(paginasSolicitadas.get(paginaActual) >= paginasSolicitadas.get(paginaMasVisitada)) {
+                        paginaMasVisitada = paginaActual;
+                    }
+                }
+            }
+            valorADevolver = paginaMasVisitada;
+        }else{
+            System.out.println("Aun no se recibieron datos.");
+        }
+        return valorADevolver;
     }
-    
+
     public String clienteConMasAccesosExitosos()
     {
         return "";
     }
-
 
 }
