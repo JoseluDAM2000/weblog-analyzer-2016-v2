@@ -7,6 +7,7 @@ import java.util.Iterator;
 public class AnalizadorAccesosAServidor
 {
     private ArrayList<Acceso> accesos;
+    private static final String HTTP_OK = "200";
 
     public AnalizadorAccesosAServidor() 
     {
@@ -91,7 +92,45 @@ public class AnalizadorAccesosAServidor
 
     public String clienteConMasAccesosExitosos()
     {
-        return "";
+        String valorADevolver = null;
+        if (!accesos.isEmpty()) {
+            HashMap<String, Integer> clientesConectados = new HashMap<String, Integer>();
+            Iterator<Acceso> ite = accesos.iterator();
+            while (ite.hasNext()) {
+                Acceso accesoActual = ite.next();
+                System.out.println(accesoActual.getCodigo());
+                System.out.println(HTTP_OK);
+                if(accesoActual.getCodigo().equals(HTTP_OK)){
+                    String clienteActual = accesoActual.getIp();
+                    if(!clientesConectados.containsKey(clienteActual)){
+                        clientesConectados.put(clienteActual, 1);
+                    }else{
+                        clientesConectados.put(clienteActual, clientesConectados.get(clienteActual) + 1);
+                    }
+                }
+            }
+            String clienteConMasAccesos = null;
+            Iterator<String> it = clientesConectados.keySet().iterator();
+            while (it.hasNext()) {
+                String ipActual = it.next();
+                if(clienteConMasAccesos == null){
+                    clienteConMasAccesos = ipActual;
+                }else{
+                    if(clientesConectados.get(ipActual) > clientesConectados.get(clienteConMasAccesos)) {
+                        clienteConMasAccesos = ipActual;
+                    } else if(clientesConectados.get(ipActual) == clientesConectados.get(clienteConMasAccesos)){
+                        String[] octetosIpActual = ipActual.split("\\.");
+                        String[] octetosIpMasAccesos = clienteConMasAccesos.split("\\.");
+                        if(Integer.parseInt(octetosIpActual[3]) > Integer.parseInt(octetosIpMasAccesos[3])){
+                            clienteConMasAccesos = ipActual;
+                        }
+                    }
+                }
+            }
+            valorADevolver = clienteConMasAccesos;
+        }else{
+            System.out.println("Aun no se recibieron datos.");
+        }
+        return valorADevolver;
     }
-
 }
